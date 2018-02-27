@@ -1,0 +1,317 @@
+<!DOCHTML>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width ,initial-scale=1.0">
+    <title>外籍勞工</title>
+
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<style>
+    @import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+    .axis {
+        font: 1vw sans-serif;
+    }
+
+    p {
+        font: 1vw 'Noto Sans TC', sans-serif;
+        margin: 0 0 2px 0;
+        padding: 0;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #373C38;
+        /* shape-rendering:crispEdges; */
+    }
+
+    .brush .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+    }
+</style>
+<style>
+    /* @media only screen and(max-width:){
+
+    } */
+
+    body {
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+    .cover {
+        
+        height: 100vh;
+        text-align: center;
+    }
+
+    #header {
+        height: 70vh;
+        font-size: 3vw;
+        font-family: 'Noto Sans TC', sans-serif;
+        font-weight: 600;
+        line-height: 80vh;
+
+    }
+
+    .body1 {
+        height: 120vh;
+    }
+
+    .body2 {
+      
+        height: 120vh;
+    }
+
+    .body3 {
+        
+        height: 90vh;
+    }
+
+    #population {
+        margin-left: 16%;
+    }
+
+    .desc {
+        position: relative;
+        font-family: 'Noto Sans TC', sans-serif;
+        fill: #546E7A;
+    }
+
+    #topic {
+        font-size: 1.3vw;
+        line-height: 4vh;
+        text-align: center;
+    }
+
+    .subh2 {
+        font-family: 'Noto Sans TC', sans-serif;
+        font-size: 1.5vw;
+        font-weight: border;
+    }
+
+    #subh2_0 {
+        width: 100%;
+        height: 60;
+        line-height: 4vh;
+        margin-left: 18%;
+        font-size: 1.3vw;
+    }
+
+    #subh2 {
+        width: 380;
+        height: 40;
+        margin-top: 2%;
+        margin-left: 18%;
+    }
+
+    #subh2_1 {
+        width: 80vw;
+        height: 10vh;
+        line-height: 1vh;
+        margin-top: 2%;
+        margin-left: 18%;
+    }
+
+    #subh2_2 {
+        margin-top: 2%;
+        margin-left: 18%;
+    }
+
+    #ex1 {
+
+        width: 100%;
+        height: 40;
+        line-height: 4vh;
+        margin-top: 2%;
+        margin-bottom: 5%;
+        margin-left: 18%;
+        font-size: 1.1vw;
+
+    }
+
+
+
+    /* #cover {
+        width: 80%;
+        height: 100vh;
+        line-height: 500vh;
+        margin-left: 10%;
+        text-align: center;
+    } */
+
+    #timeLine {
+        position: fixed;
+        visibility: hidden;
+        width: 80;
+        height: 500vh;
+        top: 10%;
+        left: 15%;
+        /* float: left; */
+    }
+
+    #donut_from {
+        position: relative;
+        margin-left: 25%;
+        width: 30vw;
+        height: 60vh;
+        float: left;
+
+    }
+
+    .subh3 {
+        font-family: 'Noto Sans TC', sans-serif;
+        fill: black;
+        font-size: 1.2vw;
+        font-weight: border;
+    }
+
+    #subh3 {
+        width: 580;
+        height: 50;
+        margin-left: 19%;
+    }
+
+    #aboriginal {
+        width: 580;
+        height: 50;
+        margin-left: 19%;
+    }
+
+    #religion {
+        width: 200;
+        height: 30vh;
+        margin-top: 10%;
+        margin-left: 65%;
+    }
+
+    #Footer {
+
+        height: 20vh;
+        /* background-color:#9CCC65; */
+    }
+
+    .highlight {
+        background: linear-gradient(transparent 40%, rgba(255, 255, 255, 0) 40%, #FFF176 90%, transparent 95%);
+        padding: 0.4vw 0.1vh;
+    }
+
+    #donut_threek {
+        position: relative;
+        width: 30vw;
+        height: 60vh;
+        margin-top: 7%;
+        margin-left: 25%;
+        display: inline-block;
+    }
+
+    #donut_care {
+        position: relative;
+        width: 30vw;
+        height: 60vh;
+        margin-left: 5%;
+        display: inline-block;
+    }
+
+    #subh3_2 {
+        width: 100%;
+        height: 40;
+        line-height: 4vh;
+        margin-left: 18%;
+        font-size: 1.3vw;
+    }
+
+    #linechart {
+        position: relative;
+        width: 700;
+        height: 400;
+        margin-left: 30%;
+
+    }
+
+    #block {
+        font-size: 2vw;
+        text-align: center;
+        stroke: rgba(78, 52, 104, 0.93);
+    }
+</style>
+
+<body>
+    <div class="cover col-sm-12">
+        <h1 id="header"> 移 工 的 台 灣 夢</h1>
+        <h2 id="topic" class="desc">周末的街頭、車站充斥著陌生的東南亞臉孔，他們是一群撐起台灣底層社會的外籍移工，即俗稱的「外勞」。<br> 自開放移工至今已快三十年，人數已在2014年首度超越原住民總人口，在全球化流動的脈絡下，漂泊異鄉打拼的他們，
+            <br>其實與台幹、抑或是中國的北漂青年本質上並無不同，但我們何時能夠真正用同理的眼光來接納這群勇敢懷抱台灣夢的移工朋友呢?
+            <br>第一步，就從了解移工開始吧! </h2>
+    </div>
+
+    <div id="block">-</div>
+
+    <div class="body1 col-sm-12">
+        <h3 id="subh2_0" class="desc">台灣移工人數約占台灣人口的四十分之一，
+            <mark class="highlight">代表每四十個台灣人之中就有一位外籍勞工，</mark>移工儼然成為台灣不可或<br>缺的勞動力。</h3>
+        <h3 id="subh2" class="desc subh2">【 移工與台灣就業市場關係 】</h3>
+        <h4 id="subh3" class="desc subh3">
+            <font id="year" style="font-size:3vw"> 2017 </font>年在台外籍移工已達
+            <font id="total" style="font-size:3vw">663234</font>人</h4>
+        <h4 id="aboriginal" class="desc subh3">超越原住民人數 559426</h4>
+        <div id="population"></div>
+    </div>
+
+    <div id="block">-</div>
+    <div class="body2 col-sm-12">
+        <h3 id="subh2_0" class="desc">在我們享受開放移工帶來廉價勞動力的同時，我們往往容易忘記他們不只是一份勞動力而是一個「人」，身為一個人<br>所需要的身分、尊重，我們是否給予了。</h3>
+        <ul id="ex1" class="desc">
+            <li>護照和居留證莫名其妙被收走了，在工廠裡我不再有我的名字，剩下的只是一組代稱或編號
+                <li>我是穆斯林，但太太卻叫我把餐後剩的豬肉吃完，不吃就罵我浪費食物
+                    <li>「為什麼你要一直包著頭巾?」
+        </ul>
+        <h3 id="subh2_0" class="desc">這是東南亞移工在台灣常常遭遇的處境，其實移工們依據來自國家不同，大多都有自己的宗教信仰，與台灣傳統信仰<br>佛教、道教，在習俗上是有很大的不同的</h3>
+        <h3 id="subh2_1" class="desc subh2">【 外籍移工都來自哪裡呢? 】</h3>
+        <div id="timeLine"></div>
+
+        <div id="donut_from"></div>
+        <div id="religion" class="desc">滑鼠移動圖表，了解移工信仰</div>
+    </div>
+    <div id="block">-</div>
+
+    <div class="body3 col-sm-12">
+        <h3 id="subh2_0" class="desc">在探討移工議題時，「外勞引進減少台灣人就業機會」常常被提起，但其實移工在台多從事<br>
+            <mark class="highlight">3K行業比較「骯髒、危險、辛苦」的工作</mark>與社福體系中
+            <mark class="highlight">「憂鬱症高危險群」的看護工</mark>，這些工作大多數台人從事意願並不高<br>代表，若沒有外籍勞工 ，我們的底層產業與失能者照護人力需求是不足的
+        </h3>
+        <h3 id="subh2_2" class="desc subh2">【 外籍移工對台灣的意義: 搶飯碗的一群人??】</h3>
+        <div id="donut_threek"></div>
+        <div id="donut_care"></div>
+    </div>
+    <div id="block">-</div>
+
+    <div class="col-sm-12" >
+        <h3 id="subh2_0" class="desc">移工在台主要從事高風險行業，從勞保統計數字來看，外勞的職災發生率高於國內勞工<br> 而外勞發生職災後，往往會因傷病無法從事原工作而被遣返，形成外勞市場這種「用壞即丟」的現象
+        </h3>
+        <!--台勞與外勞職業災害率比較 -->
+        <h3 id="subh2" class="desc subh2">【 台灣夢，到底是美夢還是惡夢? 】</h3>
+        <div id="linechart"></div>
+        <!-- 產業外勞與社福外勞比例圖
+           <div id = "donut_work"></div> -->
+    </div>
+    <div id="block">-</div>
+    <h3 id='subh3_2' class="desc subh3">移工來台，對台灣產業、社福從原本的補充性勞力到今日的替代性勞力，成為台灣社會不可或缺的族群<br> 對於移工，我們是否提供了一個友善的工作環境?
+        <br>抑或只是歧異的眼光看待這些承擔台人不願從事之低階但必須的工作、<br>代替缺席的家人照顧幼兒長者的移工朋友呢?</div>
+    </h3>
+<div id="Footer"></div>
+</body>
+
+<script type="text/javascript" src="index.js"></script>
+
+</html>
