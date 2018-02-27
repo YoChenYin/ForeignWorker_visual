@@ -539,7 +539,7 @@
              })
              .attr("transform", function (d, i) {
                  if (i < 4)
-                     return "translate(25," + (14 + 18 * i) + ")"
+                     return "translate(25," + (14 + 20 * i) + ")"
                  else if (i < 6)
                      return "translate(250," + (14 + 18 * (i - 4)) + ")";
              })
@@ -764,7 +764,8 @@
                      'font-family': "'Inconsolata', monospace"
                  });
             var religion = [];
-            religion.push("印尼<br>伊斯蘭教<br>可能每日要求祈禱數次<br>不吃豬肉、齋戒月白天禁水禁食","菲律賓<br>天主教<br>星期日可能要求去教堂","泰國<br>佛教","越南<br>佛教");
+          
+            religion.push("<font color=#64363C>印尼<br>伊斯蘭教<br>可能每日要求祈禱數次<br>不吃豬肉、齋戒月白天禁水禁食</font>","<font color=#BEC23F>菲律賓<br>天主教<br>星期日可能要求去教堂</font>","<font color=#FFB11B>泰國<br>佛教</font>","<font color=#F596AA>越南<br>佛教</font>");
              //逐年變動
              TimeLine.selectAll('text')
                  .on('mouseover', function (d, i) {
@@ -858,7 +859,7 @@
                      });
 
                  });
-             svg1.selectAll("path").on("mouseover", function (d, i, j) {
+             svg1.selectAll("g").selectAll("path").on("mouseover", function (d, i, j) {
                 $("#religion").html(religion[i]);
                 g_legend.selectAll('rect').attr("opacity", 0.7);
                 g_legend.selectAll('text').attr("opacity", 0.7);
