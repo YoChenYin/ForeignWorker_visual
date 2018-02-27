@@ -765,7 +765,7 @@
                  });
             var religion = [];
           
-            religion.push("<font color=#64363C>印尼<br>伊斯蘭教<br>可能每日要求祈禱數次<br>不吃豬肉、齋戒月白天禁水禁食</font>","<font color=#BEC23F>菲律賓<br>天主教<br>星期日可能要求去教堂</font>","<font color=#FFB11B>泰國<br>佛教</font>","<font color=#F596AA>越南<br>佛教</font>");
+            religion.push("印尼<br>伊斯蘭教<br>可能每日要求祈禱數次<br>不吃豬肉、齋戒月白天禁水禁食","菲律賓<br>天主教<br>星期日可能要求去教堂","泰國<br>佛教","越南<br>佛教");
              //逐年變動
              TimeLine.selectAll('text')
                  .on('mouseover', function (d, i) {
