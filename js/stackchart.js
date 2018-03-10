@@ -1,0 +1,333 @@
+var margin = {
+        top: 20,
+        right: 20,
+        bottom: 40,
+        left: 40
+    },
+    w = window.innerWidth * 0.55 - margin.left - margin.right,
+    w1 = window.innerWidth * 0.6 - margin.left - margin.right,
+    h = 500 - margin.top - margin.bottom;
+var parse = d3.time.format("%Y").parse;
+var _f = d3.format(".0f");
+
+d3.csv("database/stackchart.csv", function (error, dataset) {
+    if (error) throw error;
+
+    var svg = d3.select("#stack-chart").append('svg')
+        .attr("width", w)
+        .attr("height", h)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    //transpose data into layers
+    var data = d3.layout.stack()(["印尼", "菲律賓", "泰國", "越南"].map(function (workers) {
+        return dataset.map(function (d) {
+            return {
+                x: parse(d.年分),
+                y: +d[workers] / 10000
+            };
+        });
+    }));
+    var colors = ["#64363C", '#BEC23F', "#FFB11B", "#F596AA"];
+
+    var x = d3.scale.ordinal()
+        .domain(data[0].map(function (d) {
+            return d.x;
+        }))
+        .rangeRoundBands([0, w - 50], 0.18);
+
+    var y = d3.scale.linear()
+        .domain([0, d3.max(data, function (d) {
+            return d3.max(d, function (d) {
+                return d.y0 + d.y;
+            });
+        })])
+        .range([h - 70, 0]);
+
+    var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format("%Y")),
+        yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(function (d) {
+            return d
+        });
+    svg.append('g').attr("class", "x axis").call(xAxis).attr('transform', 'translate(' + 0 + ',' + 370 + ')');
+    svg.append('g').attr("class", "y axis").call(yAxis);
+
+    var group_by_year = svg.selectAll(".num_of_people")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("fill", function (d, i) {
+            return colors[i];
+        })
+        .attr("stroke", "#fff")
+        .attr("class", "num_of_people");
+
+
+
+    var rect = group_by_year.selectAll("rect")
+        .data(function (d) {
+            return d;
+        })
+        .enter()
+        .append("rect")
+        .attr("x", function (d) {
+            return x(d.x);
+        })
+        .attr("y", function (d) {
+            return y(d.y0 + d.y);
+        })
+        .attr("width", x.rangeBand())
+        .attr("height", function (d) {
+            return y(d.y0) - y(d.y0 + d.y);
+        })
+        .attr("class", "rect_country");
+
+    var text = group_by_year.selectAll("text")
+        .data(function (d) {
+            return d;
+        })
+        .enter()
+        .append("text")
+        .attr("x", function (d) {
+            return x(d.x);
+        })
+        .attr("y", function (d) {
+            return y(d.y0 + d.y);
+        })
+        .text(function (d, i) {
+            return _f(d.y * 10000);
+        })
+        .attr({
+            'fill': "#000",
+            'stroke': "none",
+            'font-size': '1vw',
+            'font-weight': 'border',
+            'font-family': "'Inconsolata', monospace",
+        })
+        .attr("visibility", "hidden")
+        .attr("class", "desc_country")
+        .attr("id", function (d, i, j) {
+            return "desc_country" + j + i;
+        })
+    var label = ["印尼", "菲律賓", "泰國", "越南"];
+    var legend = svg.selectAll(".legend")
+        .data(colors)
+        .enter()
+        .append("g")
+        .attr("class", "legend")
+
+    legend.append("rect")
+        .attr('x', function (d, i) {
+            return 10 + i * 70
+        })
+        .attr('y', 400)
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", function (d, i) {
+            return colors[i];
+        })
+
+    legend.append("text")
+        .attr('x', function (d, i) {
+            return 25 + i * 70
+        })
+        .attr('y', 410)
+        .text(function (d, i) {
+            return label[i];
+        })
+        .call(textstyle1)
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left - 5)
+        .attr("x", 0 - (height_pop / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("人數(萬人)")
+        .call(textstyle1);
+
+    svg.append("text")
+        .attr("transform",
+            "translate(" + ((width_pop + margin.right + margin.left) / 2) + " ," +
+            (height_pop + margin.top + margin.bottom - 15 ) + ")")
+        .style("text-anchor", "middle")
+        .text("西元年").call(textstyle1);
+    var religion = [];
+    religion.push("<font size=22>印尼</font><br>伊斯蘭教<br>可能每日要求祈禱數次<br>不吃豬肉、齋戒月白天禁水禁食", "<font size=22>菲律賓</font><br>天主教<br>星期日可能要求去教堂", "<font size=22>泰國</font><br>佛教", "<font size=22>越南</font><br>佛教");
+    group_by_year.selectAll("rect")
+        .on("mouseover", function (d, i, j) {
+
+            d3.selectAll(".num_of_people").selectAll("rect").attr("opacity", 0.5);
+            d3.select("#desc_country" + j + i).attr("visibility", "visible");
+            d3.select(this).attr("opacity", 1);
+            $("#religion").html(religion[j]);
+        })
+        .on("mouseout", function (d, i, j) {
+            d3.selectAll("rect").attr("opacity", 1);
+            d3.select("#desc_country" + j + i).attr("visibility", "hidden");
+        })
+
+})
+d3.csv("database/stackchart.csv", function (error, dataset) {
+    if (error) throw error;
+
+    var svg = d3.select("#donut_threek").append('svg')
+        .attr("width", w1)
+        .attr("height", h)
+        .append("g")
+        .attr("transform", "translate(" + margin.left * 2 + "," + margin.top + ")");
+    //transpose data into layers
+    var data = d3.layout.stack()(["製造業外勞", "製造業缺工"].map(function (workers) {
+        return dataset.map(function (d) {
+            return {
+                x: parse(d.年分),
+                y: +d[workers] / 10000
+            };
+        });
+    }));
+    var colors = ['#BEC23F', "#FFB11B"];
+
+    var x = d3.scale.ordinal()
+        .domain(data[0].map(function (d) {
+            return d.x;
+        }))
+        .rangeRoundBands([0, w - 30], 0.18);
+
+    var y = d3.scale.linear()
+        .domain([0, d3.max(data, function (d) {
+            return d3.max(d, function (d) {
+                return d.y0 + d.y;
+            });
+        })])
+        .range([h - 70, 0]);
+
+    var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format("%Y")),
+        yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(function (d) {
+            return d
+        });
+    svg.append('g').attr("class", "x axis").call(xAxis).attr('transform', 'translate(' + 0 + ',' + 370 + ')');
+    svg.append('g').attr("class", "y axis").call(yAxis);
+
+    var group_by_year = svg.selectAll(".num_of_people")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("fill", function (d, i) {
+            return colors[i];
+        })
+        .attr("class", "num_of_people1");
+    var text = group_by_year.selectAll("text")
+        .data(function (d) {
+            return d;
+        })
+        .enter()
+        .append("text")
+        .attr("x", function (d) {
+            return x(d.x);
+        })
+        .attr("y", function (d) {
+            return y(d.y0 + d.y);
+        })
+        .text(function (d, i) {
+            return _f(d.y * 10000);
+        })
+        .attr({
+            'fill': "#000",
+            'stroke': "none",
+            'font-size': '1vw',
+            'font-weight': 'border',
+            'font-family': "'Inconsolata', monospace",
+        })
+        .attr("visibility", "hidden")
+        .attr("class", "desc_country1")
+        .attr("id", function (d, i, j) {
+            return "desc_country1" + j + i;
+        })
+    var rect = group_by_year.selectAll("rect")
+        .data(function (d) {
+            return d;
+        })
+        .enter()
+        .append("rect")
+        .attr("x", function (d) {
+            return x(d.x);
+        })
+        .attr("y", function (d) {
+            return y(d.y0 + d.y);
+        })
+        .attr("width", x.rangeBand())
+        .attr("height", function (d) {
+            return y(d.y0) - y(d.y0 + d.y);
+        });
+
+    var label = ["製造業外勞人數", "製造業缺工人數"];
+    var legend = svg.selectAll(".legend")
+        .data(colors)
+        .enter()
+        .append("g")
+        .attr("class", "legend")
+
+    legend.append("rect")
+        .attr('x', function (d, i) {
+            return 10 + i * 120
+        })
+        .attr('y', 400)
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", function (d, i) {
+            return colors[i];
+        })
+
+    legend.append("text")
+        .attr('x', function (d, i) {
+            return 25 + i * 120
+        })
+        .attr('y', 410)
+        .text(function (d, i) {
+            return label[i];
+        })
+        .call(textstyle1)
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left - 5)
+        .attr("x", 0 - (height_pop / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("人數(萬人)")
+        .call(textstyle1);
+
+    svg.append("text")
+        .attr("transform",
+            "translate(" + ((width_pop + margin.right + margin.left) / 2) + " ," +
+            (height_pop + margin.top + margin.bottom - 15 ) + ")")
+        .style("text-anchor", "middle")
+        .text("西元年").call(textstyle1);
+
+    group_by_year.selectAll("rect")
+        .on("mouseover", function (d, i, j) {
+            d3.selectAll(".num_of_people1").selectAll("rect").attr("opacity", 0.7);
+            d3.select(this).attr("opacity", 1);
+            $("#religion").html(religion[j]);
+            d3.select("#desc_country1" + j + i).attr("visibility", "visible");
+        })
+        .on("mouseout", function (d, i, j) {
+            d3.selectAll("rect").attr("opacity", 1);
+            d3.select("#desc_country1" + j + i).attr("visibility", "hidden");
+        })
+
+})
+
+function textstyle1(t) {
+    t.attr({
+        'fill': "#373C38",
+        'font-size': '1vw',
+        'font-weight': '500',
+        'font-family': "'Noto Sans TC', sans-serif"
+    });
+}
+
+function textstyle(t) {
+    t.attr({
+        'fill': "#6E552F",
+        'font-size': '1vw',
+        'font-weight': 'border',
+        'font-family': "'Inconsolata', monospace"
+    });
+}

@@ -1,0 +1,205 @@
+@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+.axis {
+    font: 1vw sans-serif;
+}
+
+p {
+    font: 1vw 'Noto Sans TC', sans-serif;
+    margin: 0 0 2px 0;
+    padding: 0;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #373C38;
+    /* shape-rendering:crispEdges; */
+}
+
+.brush .extent {
+    stroke: #fff;
+    fill-opacity: .125;
+    shape-rendering: crispEdges;
+}
+
+body {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.flex-container-cover {  
+    display: flex;
+    flex-direction: column;
+    height:35vh;
+    text-align: center;
+}
+
+#header {
+    font-size: 3vw;
+    font-weight: 600;
+}
+#topic {
+    font-size: 1.3vw;
+    line-height: 4vh;
+    text-align: center;
+}
+#source{
+    font-size: 1.1vw;
+    line-height: 4vh;
+    text-align: center;
+}
+.desc {
+    position: relative;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 500;
+}
+.flex-container {
+    display: flex;
+    flex-direction: column;  
+}
+.cover .body1 {
+    height: 120vh;
+}
+[class^=“body”]{
+    height: 80vh;
+}
+
+#population {
+    margin-left: 16%;
+   
+}
+
+.subh2 {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 1.5vw;
+    font-weight: border;
+}
+
+#subh2_0 {
+    width: 70%;
+    line-height: 4vh;
+    margin-left: 18%;
+    font-size: 1.3vw;
+}
+#subh3_2 {
+    width: 70%;
+    line-height: 4vh;
+    margin-left: 18%;
+    font-size: 1.3vw;
+}
+
+
+#subh2 {
+    width: 100%;
+    height: 40;
+    margin-top: 2%;
+    margin-left: 18%;
+}
+
+#subh2_1 {
+    width: 80vw;
+    height: 5vh;
+    line-height: 1vh;
+    margin-top: 2%;
+    margin-left: 18%;
+}
+
+#subh2_2 {
+    margin-top: 2%;
+    margin-left: 18%;
+}
+
+#ex1 {
+
+    width: 100%;
+    height: 40;
+    line-height: 4vh;
+    margin-top: 2%;
+    margin-bottom: 5%;
+    margin-left: 18%;
+    font-size: 1.1vw;
+}
+#ex2{
+    font-size: 1.1vw; 
+}
+#stack-chart {
+    position: relative;
+    margin-left: 18%;
+    width: 50vw;
+    height: 70vh;
+    float: left;
+}
+.flex-container-donut{
+    display:flex;
+    flex-direction: row;
+}
+.subh3 {
+    font-family: 'Noto Sans TC', sans-serif;
+    fill: black;
+    font-size: 1.2vw;
+    font-weight: border;
+}
+
+#subh3 {
+    width: 580;
+    height: 50;
+    margin-left: 19%;
+}
+
+#aboriginal {
+    width: 580;
+    height: 20;
+    margin-left: 19%;
+}
+
+#religion {
+    width: 450;
+    height: 30vh;
+    line-height: 7vh;
+    margin-top: 7%;
+    margin-left: 5%;
+}
+
+
+.highlight {
+    background: linear-gradient(transparent 40%, rgba(255, 255, 255, 0) 40%, #FFF176 90%, transparent 95%);
+    padding: 0.4vw 0.1vh;
+}
+
+#donut_threek {
+    position: relative;
+    width: 50vw;
+    height: 70vh;
+    
+    margin-left: 18%; 
+    
+}
+#threek {
+    position: relative;
+    width: 50vw;
+    height: 60vh;
+   
+    margin-left: 23%; 
+    
+}
+#donut_care {
+    position: relative;
+    width: 50vw;
+    height: 60vh;
+    margin-left: 23%;
+   
+}
+
+#linechart {
+    position: relative;
+    width: 700;
+    height: 400;
+    margin-left: 23%;
+
+}
+
+#block {
+    font-size: 2vw;
+    text-align: center;
+    stroke: rgba(78, 52, 104, 0.93);
+}
