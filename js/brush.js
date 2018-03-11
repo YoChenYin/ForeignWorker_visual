@@ -2,17 +2,17 @@ var margin = {
         top: 20,
         right: 20,
         bottom: 110,
-        left: 50
+        left: 20
     },
     margin2 = {
-        top: 430,
+        top: 480,
         right: 20,
         bottom: 30,
-        left: 50
+        left: 20
     },
-    width_pop = window.innerWidth*0.7 - margin.left - margin.right,
-     height_pop = 500 - margin.top - margin.bottom,
-     height2 =500 - margin2.top - margin2.bottom;
+    width_pop = parseInt(d3.select("#population").style("width"),10) - margin.left - margin.right,  
+    height_pop = parseInt(d3.select("#population").style("height"),10)  - margin.top - margin.bottom,
+    height2 = parseInt(d3.select("#population").style("height"),10) - margin2.top - margin2.bottom;
     // width_pop = 960 - margin.left - margin.right,
     // height_pop = 500 - margin.top - margin.bottom,
     // height2 = 500 - margin2.top - margin2.bottom;
@@ -70,7 +70,7 @@ d3.csv("./database/brushdata.csv", type, function (error, data) {
         .enter().append("circle")
         .attr('class', 'dot')
         .attr("r", function (d) {
-            return d.移工總計 / 25000;
+            return (d.移工總計 / 25000)*(parseInt(d3.select("#population").style("width"),10)/1000);
         })
         .attr("cx", function (d) {
             return x(d.年分);
@@ -89,7 +89,7 @@ d3.csv("./database/brushdata.csv", type, function (error, data) {
         .enter().append("circle")
         .attr('class', 'dot_tw')
         .attr("r", function (d) {
-            return d.台勞 / 120000;
+            return (d.台勞 / 120000)*(parseInt(d3.select("#population").style("width"),10)/1000);
         })
         .style("opacity", .4)
         .attr("cx", function (d) {
@@ -97,9 +97,9 @@ d3.csv("./database/brushdata.csv", type, function (error, data) {
         })
         .attr("cy", function (d) {
             if (d.growth_rate > 6)
-                return y(d.growth_rate) + d.台勞 / 130000;
+                return y(d.growth_rate) + (d.台勞 / 130000)*(parseInt(d3.select("#population").style("width"),10)/1000);
             else
-                return y(d.growth_rate) - d.台勞 / 130000;
+                return y(d.growth_rate) - (d.台勞 / 130000)*(parseInt(d3.select("#population").style("width"),10)/1000);
         })
         .attr("fill", function (d) {
             return Gradient1(d.台勞);
@@ -158,21 +158,20 @@ d3.csv("./database/brushdata.csv", type, function (error, data) {
         .attr("class", "axis axis--y")
         .call(yAxis);
 
-    focus.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left - 5)
-        .attr("x", 0 - (height_pop / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("移工逐年成長率")
-        .call(textstyle1);
-
-    svg_pop.append("text")
+        focus.append("text")
         .attr("transform",
-            "translate(" + ((width_pop + margin.right + margin.left) / 2) + " ," +
-            (height_pop + margin.top + margin.bottom +20) + ")")
+            "translate(" + margin.left * 5 + " ," +
+            0 + ")")
         .style("text-anchor", "middle")
-        .text("西元年").call(textstyle1);
+        .text("移工逐年成長率 /")
+        .call(textstyle1);
+    focus.append("text")
+        .attr("transform",
+            "translate(" + (margin.left * 4 + margin.right*4) + " ," +
+            0 + ")")
+        .style("text-anchor", "middle")
+        .text("年")
+        .call(textstyle1);
 
     // append scatter plot to brush chart area      
     var dots_b = context.append("g");
@@ -206,17 +205,17 @@ d3.csv("./database/brushdata.csv", type, function (error, data) {
         .attr("height", height2 + 7);
 
     svg_pop.append('circle').attr({
-        'transform': 'translate(50,520)',
+        'transform': 'translate('+(margin.left+margin.right)+','+(margin.top+5)+')',
         'r': 5,
         'fill': '#26453D',
     })
-    svg_pop.append("text").text('外籍移工人數').attr('transform', 'translate(70,525)').call(textstyle1);
+    svg_pop.append("text").text('外籍移工人數').attr('transform', 'translate('+(margin.left+margin.right*2-15)+','+(margin.top+10)+')').call(textstyle1);
     svg_pop.append('circle').attr({
-        'transform': 'translate(220,520)',
+        'transform': 'translate('+(margin.left*4+margin.right*5)+','+(margin.top+5)+')',
         'r': 5,
         'fill': '#E8B647',
     })
-    svg_pop.append("text").text('台灣就業人數').attr('transform', 'translate(225,525)').call(textstyle1);
+    svg_pop.append("text").text('台灣就業人數').attr('transform', 'translate('+(margin.left+margin.right*7)+','+(margin.top+10)+')').call(textstyle1);
 
     //event
     var last = 0;
@@ -237,7 +236,7 @@ d3.csv("./database/brushdata.csv", type, function (error, data) {
             }
             d3.select('#dots' + last).transition().duration(300).ease('poly', 2).attr({
                 r: function (d) {
-                    return d.移工總計 / 25000;
+                    return (d.移工總計 / 25000)*(parseInt(d3.select("#population").style("width"),10)/1000);
                 },
                 fill: function (d) {
                     return Gradient(d.移工總計);
@@ -266,7 +265,7 @@ d3.csv("./database/brushdata.csv", type, function (error, data) {
         //(litter circle)
         d3.select(this).transition().duration(300).ease('poly', 2).attr({
             r: function (d) {
-                return d.移工總計 / 120000;
+                return (d.移工總計 / 120000)*(parseInt(d3.select("#population").style("width"),10)/1000);
             },
 
             opacity: 1
@@ -306,9 +305,9 @@ function brushed() {
         })
         .attr("cy", function (d) {
             if (d.growth_rate > 6)
-                return y(d.growth_rate) + d.台勞 / 130000;
+                return y(d.growth_rate) + (d.台勞 / 130000)*(parseInt(d3.select("#population").style("width"),10)/1000);
             else
-                return y(d.growth_rate) - d.台勞 / 130000;
+                return y(d.growth_rate) - (d.台勞 / 130000)*(parseInt(d3.select("#population").style("width"),10)/1000);
         });
     focus.selectAll(".dot_info")
         .attr("x", function (d) {

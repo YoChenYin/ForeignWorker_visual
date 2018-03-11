@@ -1,12 +1,12 @@
 var margin = {
-        top: 20,
+        top: 30,
         right: 20,
         bottom: 40,
-        left: 40
+        left: 10
     },
-    w = window.innerWidth * 0.55 - margin.left - margin.right,
-    w1 = window.innerWidth * 0.6 - margin.left - margin.right,
-    h = 500 - margin.top - margin.bottom;
+    w = parseInt(d3.select("#stack-chart").style("width"), 10) - margin.left - margin.right,
+    w1 = parseInt(d3.select("#stack-chart").style("width"), 10) - margin.left - margin.right,
+    h = parseInt(d3.select("#stack-chart").style("height"), 10) - margin.top ;
 var parse = d3.time.format("%Y").parse;
 var _f = d3.format(".0f");
 
@@ -17,12 +17,12 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         .attr("width", w)
         .attr("height", h)
         .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + (margin.left + margin.right) + "," + (margin.top) + ")");
     //transpose data into layers
     var data = d3.layout.stack()(["印尼", "菲律賓", "泰國", "越南"].map(function (workers) {
         return dataset.map(function (d) {
             return {
-                x: parse(d.年分),
+                x: d.年分,
                 y: +d[workers] / 10000
             };
         });
@@ -43,12 +43,22 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         })])
         .range([h - 70, 0]);
 
-    var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format("%Y")),
+    var xAxis = d3.svg.axis().scale(x).orient("bottom").tickValues([2002,2004,2006,2008,2010,2012,2014,2016]),//.tickFormat(d3.time.format("%Y")),
         yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(function (d) {
             return d
         });
-    svg.append('g').attr("class", "x axis").call(xAxis).attr('transform', 'translate(' + 0 + ',' + 370 + ')');
-    svg.append('g').attr("class", "y axis").call(yAxis);
+    svg.append('g').attr("class", "x axis").call(xAxis).attr('transform', 'translate(' + 0 + ',' + (h - margin.bottom - margin.top) + ')').attr({
+        'fill': 'black',
+        'stroke': 'none',
+        'font-weight': 500,
+        'font-family': "'Inconsolata', monospace"
+    });;
+    svg.append('g').attr("class", "y axis").call(yAxis).attr({
+        'fill': 'black',
+        'stroke': 'none',
+        'font-weight': 500,
+        'font-family': "'Inconsolata', monospace"
+    });;
 
     var group_by_year = svg.selectAll(".num_of_people")
         .data(data)
@@ -118,7 +128,7 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         .attr('x', function (d, i) {
             return 10 + i * 70
         })
-        .attr('y', 400)
+        .attr('y', ( h-margin.bottom))
         .attr("width", 10)
         .attr("height", 10)
         .attr("fill", function (d, i) {
@@ -129,26 +139,25 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         .attr('x', function (d, i) {
             return 25 + i * 70
         })
-        .attr('y', 410)
+        .attr('y', ( h-margin.top))
         .text(function (d, i) {
             return label[i];
         })
         .call(textstyle1)
     svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left - 5)
-        .attr("x", 0 - (height_pop / 2))
-        .attr("dy", "1em")
+        .attr("transform",
+            "translate(" + margin.left * 2 + " ," +
+            0 + ")")
         .style("text-anchor", "middle")
-        .text("人數(萬人)")
+        .text("萬人 /")
         .call(textstyle1);
-
     svg.append("text")
         .attr("transform",
-            "translate(" + ((width_pop + margin.right + margin.left) / 2) + " ," +
-            (height_pop + margin.top + margin.bottom - 15 ) + ")")
+            "translate(" + (margin.left * 3 + margin.right) + " ," +
+            0 + ")")
         .style("text-anchor", "middle")
-        .text("西元年").call(textstyle1);
+        .text("年")
+        .call(textstyle1);
     var religion = [];
     religion.push("<font size=22>印尼</font><br>伊斯蘭教<br>可能每日要求祈禱數次<br>不吃豬肉、齋戒月白天禁水禁食", "<font size=22>菲律賓</font><br>天主教<br>星期日可能要求去教堂", "<font size=22>泰國</font><br>佛教", "<font size=22>越南</font><br>佛教");
     group_by_year.selectAll("rect")
@@ -172,12 +181,12 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         .attr("width", w1)
         .attr("height", h)
         .append("g")
-        .attr("transform", "translate(" + margin.left * 2 + "," + margin.top + ")");
+        .attr("transform", "translate(" +(margin.left+margin.right) + "," + margin.top + ")");
     //transpose data into layers
     var data = d3.layout.stack()(["製造業外勞", "製造業缺工"].map(function (workers) {
         return dataset.map(function (d) {
             return {
-                x: parse(d.年分),
+                x: d.年分,
                 y: +d[workers] / 10000
             };
         });
@@ -198,11 +207,11 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         })])
         .range([h - 70, 0]);
 
-    var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(d3.time.format("%Y")),
+    var xAxis = d3.svg.axis().scale(x).orient("bottom").tickValues([2002,2004,2006,2008,2010,2012,2014,2016]),//.tickFormat(d3.time.format("%Y")),
         yAxis = d3.svg.axis().scale(y).orient("left").tickFormat(function (d) {
             return d
         });
-    svg.append('g').attr("class", "x axis").call(xAxis).attr('transform', 'translate(' + 0 + ',' + 370 + ')');
+    svg.append('g').attr("class", "x axis").call(xAxis).attr('transform', 'translate(' + 0 + ',' + (h - margin.bottom - margin.top) + ')');
     svg.append('g').attr("class", "y axis").call(yAxis);
 
     var group_by_year = svg.selectAll(".num_of_people")
@@ -268,7 +277,7 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         .attr('x', function (d, i) {
             return 10 + i * 120
         })
-        .attr('y', 400)
+        .attr('y',( h-margin.bottom))
         .attr("width", 10)
         .attr("height", 10)
         .attr("fill", function (d, i) {
@@ -279,26 +288,25 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         .attr('x', function (d, i) {
             return 25 + i * 120
         })
-        .attr('y', 410)
+        .attr('y',  h-margin.top)
         .text(function (d, i) {
             return label[i];
         })
         .call(textstyle1)
     svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left - 5)
-        .attr("x", 0 - (height_pop / 2))
-        .attr("dy", "1em")
+        .attr("transform",
+            "translate(" + margin.left * 2 + " ," +
+            0 + ")")
         .style("text-anchor", "middle")
-        .text("人數(萬人)")
+        .text("萬人 /")
         .call(textstyle1);
-
     svg.append("text")
         .attr("transform",
-            "translate(" + ((width_pop + margin.right + margin.left) / 2) + " ," +
-            (height_pop + margin.top + margin.bottom - 15 ) + ")")
+            "translate(" + (margin.left * 3 + margin.right) + " ," +
+            0 + ")")
         .style("text-anchor", "middle")
-        .text("西元年").call(textstyle1);
+        .text("年")
+        .call(textstyle1);
 
     group_by_year.selectAll("rect")
         .on("mouseover", function (d, i, j) {
@@ -317,7 +325,7 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
 function textstyle1(t) {
     t.attr({
         'fill': "#373C38",
-        'font-size': '1vw',
+        'font-size': '12',
         'font-weight': '500',
         'font-family': "'Noto Sans TC', sans-serif"
     });
@@ -326,7 +334,7 @@ function textstyle1(t) {
 function textstyle(t) {
     t.attr({
         'fill': "#6E552F",
-        'font-size': '1vw',
+        'font-size': '12',
         'font-weight': 'border',
         'font-family': "'Inconsolata', monospace"
     });

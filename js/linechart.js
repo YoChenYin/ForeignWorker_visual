@@ -2,15 +2,15 @@
 //append svg ,g and set position
 var padding = {
     top: 50,
-    right: 50,
+    right: 40,
     bottom: 30,
     left: 30
 };
-var width_Line = window.innerWidth*0.5- padding.left - padding.right,
-    height_Line = 450- padding.top - padding.bottom;
+var width_Line = parseInt(d3.select("#threek").style("width"), 10) - padding.left - padding.right,
+    height_Line = parseInt(d3.select("#threek").style("height"), 10) - padding.top - padding.bottom;
 d3.csv("./database/Linedata.csv", function (error, csvdata) {
     if (error) throw error;
-    
+
     var svgLineChart = d3.select("#linechart").append('svg').attr({
         'width': width_Line,
         'height': height_Line
@@ -32,7 +32,7 @@ d3.csv("./database/Linedata.csv", function (error, csvdata) {
     var yScale = d3.scale.linear().domain([0, Ymax]).range([height_Line - padding.top - padding.bottom, 0]);
 
     //創建x,y軸
-    var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
+    var xAxis = d3.svg.axis().scale(xScale).orient('bottom').ticks(4);
     var yAxis = d3.svg.axis().scale(yScale).tickFormat(function (d) {
         return d + '%';
     }).orient('left');
@@ -66,20 +66,19 @@ d3.csv("./database/Linedata.csv", function (error, csvdata) {
         });
 
     LineChart.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left - 5)
-        .attr("x", 0 - (height_pop / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("職災率(%)")
-        .call(textstyle1);
-
-    LineChart.append("text")
         .attr("transform",
-            "translate(" + ((width_pop + margin.right + margin.left) / 2) + " ," +
-            (height_pop - margin.top - margin.bottom) + ")")
+            "translate(" + (margin.left * 2+5) + " ," +
+            0 + ")")
         .style("text-anchor", "middle")
-        .text("西元年").call(textstyle1);
+        .text("職災率 /")
+        .call(textstyle1);
+        LineChart.append("text")
+        .attr("transform",
+            "translate(" + (margin.left * 3 + margin.right+5) + " ," +
+            0 + ")")
+        .style("text-anchor", "middle")
+        .text("年")
+        .call(textstyle1);
     //折線(產業移工&社福移工)
     var Line = [];
     Line[0] = d3.svg.line().x(function (d) {
@@ -148,15 +147,15 @@ d3.csv("./database/Linedata.csv", function (error, csvdata) {
         .attr('id', function (d, i) {
             return 'dot' + i;
         });
-    LineChart.append("text").text('台灣勞工職災率').attr('transform', 'translate(25,255)').call(textstyle1);
-    LineChart.append("text").text('外籍勞工職災率').attr('transform', 'translate(150,255)').call(textstyle1);
+    LineChart.append("text").text('台灣勞工職災率').attr('transform', 'translate('+(padding.left/2)+','+(height_Line-padding.bottom-5)+')').call(textstyle1);
+    LineChart.append("text").text('外籍勞工職災率').attr('transform', 'translate('+(padding.left*2+padding.right*2-5)+','+(height_Line-padding.bottom-5)+')').call(textstyle1);
     LineChart.append('circle').attr({
-        'transform': 'translate(15,250)',
+        'transform': 'translate('+0+','+(height_Line-padding.bottom-10)+')',
         'r': 5,
         'fill': '#E8B647',
     })
     LineChart.append('circle').attr({
-        'transform': 'translate(140,250)',
+        'transform': 'translate('+(padding.left*2+padding.right*1.5)+','+(height_Line-padding.bottom-10)+')',
         'r': 5,
         'fill': '#26453D',
     })
@@ -202,32 +201,32 @@ d3.csv("./database/Linedata.csv", function (error, csvdata) {
 });
 d3.csv("./database/long_term_care.csv", function (error, csvdata) {
     if (error) throw error;
-    
-    
+
+
     var svgLineChart = d3.select("#donut_care").append('svg').attr({
         'width': width_Line,
-        'height': height_Line
+        'height': height_Line+ padding.top + padding.bottom
     });
     var LineChart = svgLineChart.append('g');
     LineChart.attr('transform', "translate(" + padding.top + "," + padding.left + ')');
 
     //x,y軸比例尺
     var xScale = d3.scale.linear().domain(d3.extent(csvdata, function (d) {
-        return d.年分;
+        return +d.年分;
     })).range([0, width_Line - padding.left - padding.right]);
     var Ymax = d3.max(csvdata, function (d) {
         return d.外籍看護工;
     });
-    var yScale = d3.scale.linear().domain([0, Ymax]).range([height_Line - padding.top - padding.bottom, 0]);
+    var yScale = d3.scale.linear().domain([0, Ymax]).range([height_Line - padding.top*2 - padding.bottom*2, 0]);
 
     //創建x,y軸
-    var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
+    var xAxis = d3.svg.axis().scale(xScale).orient('bottom').ticks(4);
     var yAxis = d3.svg.axis().scale(yScale).tickFormat(function (d) {
-        return d/10000;
+        return d / 10000;
     }).orient('left');
 
     //call axis
-    LineChart.append('g').attr('class', 'axis').attr('transform', 'translate(0,' + (height_Line - padding.top - padding.bottom) + ')')
+    LineChart.append('g').attr('class', 'axis').attr('transform', 'translate(0,' + (height_Line - padding.top*2 - padding.bottom*2) + ')')
         .call(xAxis).attr({
             'stroke': '#000',
             'stroke-width': '2px',
@@ -254,21 +253,20 @@ d3.csv("./database/long_term_care.csv", function (error, csvdata) {
             'font-family': "'Inconsolata', monospace"
         });
 
-    LineChart.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left - 5)
-        .attr("x", 0 - (height_pop / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("人數(萬人)")
-        .call(textstyle1);
-
-    LineChart.append("text")
+        LineChart.append("text")
         .attr("transform",
-            "translate(" + ((width_pop + margin.right + margin.left) / 2) + " ," +
-            (height_pop - margin.top +5) + ")")
+            "translate(" + margin.left * 2 + " ," +
+            0 + ")")
         .style("text-anchor", "middle")
-        .text("西元年").call(textstyle1);
+        .text("萬人 /")
+        .call(textstyle1);
+        LineChart.append("text")
+        .attr("transform",
+            "translate(" + (margin.left * 3 + margin.right) + " ," +
+            0 + ")")
+        .style("text-anchor", "middle")
+        .text("年")
+        .call(textstyle1);
     //折線
     var Line = [];
     Line[0] = d3.svg.line().x(function (d) {
@@ -368,21 +366,22 @@ d3.csv("./database/long_term_care.csv", function (error, csvdata) {
         .attr('id', function (d, i) {
             return 'dot' + i;
         });
-    LineChart.append("text").text('外籍看護工人數(照顧人數)').attr('transform', 'translate(25,5)').call(textstyle1);
-    LineChart.append("text").text('居家照顧服務員人數').attr('transform', 'translate(215,5)').call(textstyle1);
-    LineChart.append("text").text('居家照顧服務人數').attr('transform', 'translate(370,5)').call(textstyle1);
+      
+    LineChart.append("text").text('外籍看護工人數(照顧人數)').attr('transform','translate('+(padding.left/2)+','+(height_Line-padding.bottom*2-padding.top+5)+')').call(textstyle1);
+    LineChart.append("text").text('居家照顧服務員人數').attr( 'transform','translate('+(padding.left/2)+','+(height_Line-padding.bottom*2-padding.top+25)+')').call(textstyle1);
+    LineChart.append("text").text('居家照顧服務人數').attr('transform', 'translate('+(padding.left/2)+','+(height_Line-padding.bottom*2-padding.top+45)+')').call(textstyle1);
     LineChart.append('circle').attr({
-        'transform': 'translate(15,0)',
+        'transform': 'translate(0'+','+(height_Line-padding.bottom*2-padding.top)+')',
         'r': 5,
         'fill': '#E8B647',
     })
     LineChart.append('circle').attr({
-        'transform': 'translate(205,0)',
+        'transform': 'translate(0'+','+(height_Line-padding.bottom*2-padding.top+20)+')',
         'r': 5,
         'fill': '#26453D',
     })
     LineChart.append('circle').attr({
-        'transform': 'translate(360,0)',
+        'transform': 'translate(0,'+(height_Line-padding.bottom*2-padding.top+40)+')',
         'r': 5,
         'fill': '#264587',
     })
@@ -437,8 +436,8 @@ d3.csv("./database/long_term_care.csv", function (error, csvdata) {
 });
 d3.csv("./database/3k.csv", function (error, csvdata) {
     if (error) throw error;
-   
-   
+
+
     var svgLineChart = d3.select("#threek").append('svg').attr({
         'width': width_Line,
         'height': height_Line
@@ -456,9 +455,9 @@ d3.csv("./database/3k.csv", function (error, csvdata) {
     var yScale = d3.scale.linear().domain([0, 300720]).range([height_Line - padding.top - padding.bottom, 0]);
 
     //創建x,y軸
-    var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
+    var xAxis = d3.svg.axis().scale(xScale).orient('bottom').ticks(4);
     var yAxis = d3.svg.axis().scale(yScale).tickFormat(function (d) {
-        return d/10000;
+        return d / 10000;
     }).orient('left');
 
     //call axis
@@ -489,20 +488,19 @@ d3.csv("./database/3k.csv", function (error, csvdata) {
             'font-family': "'Inconsolata', monospace"
         });
         LineChart.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left - 5)
-        .attr("x", 0 - (height_pop / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("人數(萬人)")
-        .call(textstyle1);
-
-    LineChart.append("text")
         .attr("transform",
-            "translate(" + ((width_pop + margin.right + margin.left) / 2) + " ," +
-            (height_pop - margin.top+5 ) + ")")
+            "translate(" + margin.left * 2 + " ," +
+            0 + ")")
         .style("text-anchor", "middle")
-        .text("西元年").call(textstyle1);
+        .text("萬人 /")
+        .call(textstyle1);
+        LineChart.append("text")
+        .attr("transform",
+            "translate(" + (margin.left * 3 + margin.right) + " ," +
+            0 + ")")
+        .style("text-anchor", "middle")
+        .text("年")
+        .call(textstyle1);
 
     //折線
     var Line = [];
@@ -575,17 +573,17 @@ d3.csv("./database/3k.csv", function (error, csvdata) {
         .attr('id', function (d, i) {
             return 'dot' + i;
         });
-
-    LineChart.append("text").text('外勞從事3k產業人數').attr('transform', 'translate(25,5)').call(textstyle1);
-    LineChart.append("text").text('附加外勞人數').attr('transform', 'translate(215,5)').call(textstyle1);
+     
+    LineChart.append("text").text('外勞從事3k產業人數').attr('transform', 'translate('+(padding.left/2)+','+(height_Line-padding.bottom-5)+')').call(textstyle1);
+    LineChart.append("text").text('附加外勞人數').attr('transform', 'translate('+(padding.left*2+padding.right*2+5)+','+(height_Line-padding.bottom-5)+')').call(textstyle1);
 
     LineChart.append('circle').attr({
-        'transform': 'translate(15,0)',
+        'transform': 'translate('+0+','+(height_Line-padding.bottom-10)+')',
         'r': 5,
         'fill': '#E8B647',
     })
     LineChart.append('circle').attr({
-        'transform': 'translate(205,0)',
+        'transform': 'translate('+(padding.left*2+padding.right*2)+','+(height_Line-padding.bottom-10)+')',
         'r': 5,
         'fill': '#26453D',
     })
