@@ -97,7 +97,7 @@ p {
 }
 
 #subh2 {
-    width: 100%;
+    width: auto;
     height: 40;
     margin-top: 2%;
     margin-left: 18%;
@@ -144,9 +144,13 @@ p {
     flex-direction: row;
     width:100%;
     height: auto;
-  
 }
-
+.flex-container-dream {
+    display: flex;
+    flex-direction: row;
+    width:100%;
+    height: auto;
+}
 .subh3 {
     font-family: 'Noto Sans TC', sans-serif;
     fill: black;
@@ -224,9 +228,20 @@ p {
     text-align: center;
     stroke: rgba(78, 52, 104, 0.93);
 }
+#method {
+    font-family: 'Noto Sans TC', sans-serif;
+    color: gray;
+    font-weight:400;
+}
 @media only screen and  (max-width: 768px) {
     .axis {
         font: 7 sans-serif;
+    }
+    #topic {
+        width:70%;
+        margin-left:18%;
+        font-weight:400;
+        font-size:16;
     }
     #population {
         margin-left: 5%;
@@ -234,6 +249,14 @@ p {
     .flex-container-donut {
         display: flex;
         flex-direction: column-reverse;
+    }
+    .flex-container-dream {
+        display: flex;
+        flex-direction: column;
+    }
+    #method{
+        margin-left: 18%;
+        margin-top: 0;
     }
     #stack-chart{
         width:100%;
@@ -251,15 +274,27 @@ p {
         width:100%;
         margin-left: 5%;
     }
+    #subh2_0 {
+        font-weight:400;
+        font-size:16;
+    }
+    #subh3_2{
+        font-weight:400;
+        font-size:16;
+    }
     #linechart{
         width:100%;
         margin-left: 5%;
+    }
+    .country {
+        font-size: 20;
     }
     #religion {
         width: 70%;
         height: auto;
         line-height: 4vh;
         margin-left: 21%;
+        margin-top:0;
     }
     #subh2_2{
         margin-left: 0;

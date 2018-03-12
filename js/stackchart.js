@@ -108,7 +108,7 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         .attr({
             'fill': "#000",
             'stroke': "none",
-            'font-size': '1vw',
+            'font-size': '14',
             'font-weight': 'border',
             'font-family': "'Inconsolata', monospace",
         })
@@ -159,7 +159,7 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         .text("年")
         .call(textstyle1);
     var religion = [];
-    religion.push("<font size=22>印尼</font><br>伊斯蘭教<br>可能每日要求祈禱數次<br>不吃豬肉、齋戒月白天禁水禁食", "<font size=22>菲律賓</font><br>天主教<br>星期日可能要求去教堂", "<font size=22>泰國</font><br>佛教", "<font size=22>越南</font><br>佛教");
+    religion.push("<font class=country size=22>印尼</font><br>伊斯蘭教<br>可能每日要求祈禱數次<br>不吃豬肉、齋戒月白天禁水禁食", "<font class=country size=22>菲律賓</font><br>天主教<br>星期日可能要求去教堂", "<font class=country size=22>泰國</font><br>佛教", "<font class=country size=22>越南</font><br>佛教");
     group_by_year.selectAll("rect")
         .on("mouseover", function (d, i, j) {
 
@@ -221,6 +221,7 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         .attr("fill", function (d, i) {
             return colors[i];
         })
+        .attr("stroke", "#fff")
         .attr("class", "num_of_people1");
     var text = group_by_year.selectAll("text")
         .data(function (d) {
@@ -240,14 +241,14 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
         .attr({
             'fill': "#000",
             'stroke': "none",
-            'font-size': '1vw',
+            'font-size': '14',
             'font-weight': 'border',
             'font-family': "'Inconsolata', monospace",
         })
         .attr("visibility", "hidden")
-        .attr("class", "desc_country1")
+        .attr("class", "desc_indus")
         .attr("id", function (d, i, j) {
-            return "desc_country1" + j + i;
+            return "desc_indus" + j + i;
         })
     var rect = group_by_year.selectAll("rect")
         .data(function (d) {
@@ -313,11 +314,11 @@ d3.csv("database/stackchart.csv", function (error, dataset) {
             d3.selectAll(".num_of_people1").selectAll("rect").attr("opacity", 0.7);
             d3.select(this).attr("opacity", 1);
             $("#religion").html(religion[j]);
-            d3.select("#desc_country1" + j + i).attr("visibility", "visible");
+            d3.select("#desc_indus" + j + i).attr("visibility", "visible");
         })
         .on("mouseout", function (d, i, j) {
             d3.selectAll("rect").attr("opacity", 1);
-            d3.select("#desc_country1" + j + i).attr("visibility", "hidden");
+            d3.select("#desc_indus" + j + i).attr("visibility", "hidden");
         })
 
 })

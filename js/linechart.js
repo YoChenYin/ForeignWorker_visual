@@ -367,7 +367,7 @@ d3.csv("./database/long_term_care.csv", function (error, csvdata) {
             return 'dot' + i;
         });
       
-    LineChart.append("text").text('外籍看護工人數(照顧人數)').attr('transform','translate('+(padding.left/2)+','+(height_Line-padding.bottom*2-padding.top+5)+')').call(textstyle1);
+    LineChart.append("text").text('外籍看護工人數 / 照顧人數(註:一人申請一看護)').attr('transform','translate('+(padding.left/2)+','+(height_Line-padding.bottom*2-padding.top+5)+')').call(textstyle1);
     LineChart.append("text").text('居家照顧服務員人數').attr( 'transform','translate('+(padding.left/2)+','+(height_Line-padding.bottom*2-padding.top+25)+')').call(textstyle1);
     LineChart.append("text").text('居家照顧服務人數').attr('transform', 'translate('+(padding.left/2)+','+(height_Line-padding.bottom*2-padding.top+45)+')').call(textstyle1);
     LineChart.append('circle').attr({

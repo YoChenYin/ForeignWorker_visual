@@ -163,7 +163,7 @@ d3.csv("./database/brushdata.csv", type, function (error, data) {
             "translate(" + margin.left * 5 + " ," +
             0 + ")")
         .style("text-anchor", "middle")
-        .text("移工逐年成長率 /")
+        .text("移工逐年成長率(%)/")
         .call(textstyle1);
     focus.append("text")
         .attr("transform",
@@ -341,7 +341,7 @@ function textstyle1(t) {
 function textstyle(t) {
     t.attr({
         'fill': "#6E552F",
-        'font-size': '1vw',
+        'font-size': '16',
         'font-weight': 'border',
         'font-family': "'Inconsolata', monospace"
     });
